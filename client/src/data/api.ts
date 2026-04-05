@@ -1,5 +1,6 @@
 // ─── API client for BVM Campus Management backend ───
-const API_BASE = 'http://localhost:5000/api';
+const configuredApiBase = import.meta.env.VITE_API_BASE_URL?.trim();
+const API_BASE = (configuredApiBase && configuredApiBase.length > 0 ? configuredApiBase : '/api').replace(/\/$/, '');
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
     const res = await fetch(`${API_BASE}${path}`, {

@@ -116,6 +116,7 @@ export default function Auth() {
                     value={loginEmail}
                     onChange={e => setLoginEmail(e.target.value)}
                     placeholder="you@college.edu"
+                    autoComplete="email"
                     required
                   />
                 </div>
@@ -128,6 +129,7 @@ export default function Auth() {
                       value={loginPassword}
                       onChange={e => setLoginPassword(e.target.value)}
                       placeholder="••••••••"
+                      autoComplete="current-password"
                       required
                     />
                     <button
@@ -193,7 +195,7 @@ export default function Auth() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="r-email">College Email</Label>
-                  <Input id="r-email" type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="you@college.edu" required />
+                  <Input id="r-email" type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="you@college.edu" autoComplete="email" required />
                   {domainRecognized && (
                     <p className={`text-xs flex items-center gap-1 ${isKnownDomain ? 'text-green-600' : 'text-orange-500'}`}>
                       {isKnownDomain
@@ -225,7 +227,7 @@ export default function Auth() {
                 )}
                 <div className="space-y-2">
                   <Label htmlFor="r-pass">Password</Label>
-                  <Input id="r-pass" type="password" value={regPassword} onChange={e => setRegPassword(e.target.value)} placeholder="••••••••" required />
+                  <Input id="r-pass" type="password" value={regPassword} onChange={e => setRegPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" required />
                 </div>
                 <Button type="submit" variant="hero" className="w-full">Create Account</Button>
               </form>

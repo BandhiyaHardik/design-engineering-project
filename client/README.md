@@ -19,14 +19,26 @@ git clone <YOUR_GIT_URL>
 # Navigate to the project directory
 cd <YOUR_PROJECT_NAME>
 
-# Install dependencies
+# Install and start backend
+cd server
 npm install
+cp .env.example .env
+npm run start
 
-# Start the development server
+# In a new terminal: install and start frontend
+cd ../client
+npm install
+cp .env.example .env
 npm run dev
 ```
 
 Open [http://localhost:8080](http://localhost:8080) to view the app.
+
+Important notes:
+
+- Backend must be running on port `5000` in development.
+- If using MongoDB Atlas, whitelist your current IP in Atlas Network Access.
+- For hosted frontend, set `VITE_API_BASE_URL` to your deployed backend API URL.
 
 ## Features
 

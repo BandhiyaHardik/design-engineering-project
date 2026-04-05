@@ -7,6 +7,12 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_DEV_API_TARGET || "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
     hmr: {
       overlay: false,
     },
