@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import {
   mockEvents, mockClubs, mockOrganizations, mockUsers, mockClubRequests,
   approveClubRequest, rejectClubRequest,
   updateEvent, addOrganization, addUser, updateUserRole,
 } from '@/data/mockData';
-import { saveCollection, loadCollection } from '@/data/storage';
+import { api } from '@/data/api';
 import { addNotification } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,17 +16,12 @@ import { Check, X, Shield, Building, Users, Calendar, CheckCircle2, Clock, Globe
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Org onboard requests — seed + persistence
+// Org onboard request type (from API)
 interface OrgRequest {
   id: string; collegeName: string; domain: string; adminName: string; adminEmail: string;
   adminPassword?: string;
-  dataHosting: 'self_hosted' | 'mitra_cloud'; status: 'pending' | 'approved' | 'rejected'; submittedAt: string;
+  dataHosting: 'self_hosted' | 'bvm_cloud' | 'college_server'; status: 'pending' | 'approved' | 'rejected'; createdAt: string;
 }
-const _seedOrgRequests: OrgRequest[] = [
-  { id: 'onb1', collegeName: 'Nirma University', domain: 'nirma.edu.in', adminName: 'Prof. Rajan', adminEmail: 'rajan@nirma.edu.in', adminPassword: 'Nirma@123', dataHosting: 'self_hosted', status: 'pending', submittedAt: '2026-03-01T00:00:00Z' },
-  { id: 'onb2', collegeName: 'DDU, Nadiad', domain: 'ddu.ac.in', adminName: 'Dr. Chauhan', adminEmail: 'chauhan@ddu.ac.in', adminPassword: 'DDU@123', dataHosting: 'mitra_cloud', status: 'pending', submittedAt: '2026-03-03T00:00:00Z' },
-];
-let persistedOrgRequests: OrgRequest[] = loadCollection('orgRequests', _seedOrgRequests);
 
 const roleHierarchy = ['super_admin', 'org_admin', 'club_admin', 'organizer', 'student'];
 const roleLabels: Record<string, string> = {
@@ -69,11 +64,17 @@ export default function AdminPanel() {
   const [pendingEvents, setPendingEvents] = useState(
     scopedEvents.filter(e => e.status === 'pending_approval')
   );
-  const [orgRequests, setOrgRequests] = useState<OrgRequest[]>(() => {
-    // Re-read from localStorage every mount so new submissions show up
-    persistedOrgRequests = loadCollection('orgRequests', _seedOrgRequests);
-    return persistedOrgRequests;
-  });
+  const [orgRequests, setOrgRequests] = useState<OrgRequest[]>([]);
+
+  // Load org requests from API on mount
+  useEffect(() => {
+    if (isSuperAdmin) {
+      api.getOrgRequests().then((data: any) => {
+        const normalized = (data as any[]).map((r: any) => ({ ...r, id: r._id || r.id }));
+        setOrgRequests(normalized);
+      }).catch(() => { });
+    }
+  }, [isSuperAdmin]);
   const [userSearch, setUserSearch] = useState('');
   const [userRoles, setUserRoles] = useState<Record<string, string>>(
     Object.fromEntries(scopedUsers.map(u => [u.id, u.role]))
@@ -98,43 +99,23 @@ export default function AdminPanel() {
   const handleOrgApprove = async (id: string) => {
     const req = orgRequests.find(r => r.id === id);
     if (!req) return;
-    // Create a new Organization
-    const adminUserId = `user-${Date.now()}`;
-    const newOrg = {
-      id: `org-${Date.now()}`,
-      name: req.collegeName,
-      domain: req.domain,
-      description: `${req.collegeName} — onboarded via Mitra.`,
-      admins: [adminUserId],
-      isVerified: true,
-      dataHosting: req.dataHosting,
-      createdAt: new Date().toISOString(),
-    };
-    await addOrganization(newOrg);
-    // Create the admin user for this org
-    const adminUser = {
-      id: adminUserId,
-      name: req.adminName,
-      email: req.adminEmail,
-      role: 'org_admin' as const,
-      organizationId: newOrg.id,
-      clubIds: [],
-      interests: [],
-      createdAt: new Date().toISOString(),
-    };
-    await addUser(adminUser, req.adminEmail, req.adminPassword || 'Welcome@123');
-    // Persist status change
-    persistedOrgRequests = persistedOrgRequests.map(r => r.id === id ? { ...r, status: 'approved' as const } : r);
-    saveCollection('orgRequests', persistedOrgRequests);
-    setOrgRequests([...persistedOrgRequests]);
-    toast.success(`Organization "${req.collegeName}" approved! Admin account created.`);
+    try {
+      await api.approveOrgRequest(id);
+      setOrgRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'approved' as const } : r));
+      toast.success(`Organization "${req.collegeName}" approved! Admin account created.`);
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to approve organization.');
+    }
   };
 
-  const handleOrgReject = (id: string) => {
-    persistedOrgRequests = persistedOrgRequests.map(r => r.id === id ? { ...r, status: 'rejected' as const } : r);
-    saveCollection('orgRequests', persistedOrgRequests);
-    setOrgRequests([...persistedOrgRequests]);
-    toast.info('Organization request rejected.');
+  const handleOrgReject = async (id: string) => {
+    try {
+      await api.rejectOrgRequest(id);
+      setOrgRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'rejected' as const } : r));
+      toast.info('Organization request rejected.');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to reject organization.');
+    }
   };
 
   const handleRoleChange = async (userId: string, newRole: string) => {
@@ -352,7 +333,7 @@ export default function AdminPanel() {
                             {org.dataHosting && (
                               <Badge variant="outline" className="text-[10px] gap-0.5">
                                 <Globe className="h-2.5 w-2.5" />
-                                {org.dataHosting === 'self_hosted' ? 'Self-hosted' : org.dataHosting === 'mitra_cloud' ? 'Mitra Cloud' : 'College Server'}
+                                {org.dataHosting === 'self_hosted' ? 'Self-hosted' : org.dataHosting === 'bvm_cloud' ? 'BVM Cloud' : 'College Server'}
                               </Badge>
                             )}
                           </div>
@@ -401,10 +382,10 @@ export default function AdminPanel() {
                               )}
                               <div className="flex items-center gap-2 mt-2">
                                 <Badge variant="outline" className="text-[10px]">
-                                  {req.dataHosting === 'self_hosted' ? '🖥️ Self-hosted' : '☁️ Mitra Cloud'}
+                                  {req.dataHosting === 'self_hosted' ? '🖥️ Self-hosted' : '☁️ BVM Cloud'}
                                 </Badge>
                                 <span className="text-[10px] text-muted-foreground">
-                                  Submitted {new Date(req.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                  Submitted {new Date(req.submittedAt || req.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                 </span>
                                 {req.status !== 'pending' && (
                                   <Badge className={`text-[10px] capitalize ${req.status === 'approved' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-destructive/10 text-destructive'}`}>

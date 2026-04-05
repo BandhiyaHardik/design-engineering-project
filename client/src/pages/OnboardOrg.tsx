@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Building, Server, Cloud, HardDrive, Check, ArrowRight, ArrowLeft, Sparkles, Shield, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { loadCollection, saveCollection } from '@/data/storage';
+import { api } from '@/data/api';
 
 const hostingOptions = [
     {
@@ -62,23 +62,26 @@ export default function OnboardOrg() {
         if (step > 0) setStep(s => s - 1);
     };
 
-    const handleSubmit = () => {
-        // Persist the org request so the Super Admin can see it
-        const newRequest = {
-            id: `onb-${Date.now()}`,
-            collegeName: form.collegeName,
-            domain: form.domain,
-            adminName: form.adminName,
-            adminEmail: form.adminEmail,
-            adminPassword: form.adminPassword,
-            dataHosting: form.dataHosting,
-            status: 'pending',
-            submittedAt: new Date().toISOString(),
-        };
-        const existing = loadCollection('orgRequests', []);
-        saveCollection('orgRequests', [...existing, newRequest]);
-        setSubmitted(true);
-        toast.success('Request submitted! The Super Admin will review and approve it.');
+    const handleSubmit = async () => {
+        try {
+            await api.createOrgRequest({
+                collegeName: form.collegeName,
+                domain: form.domain,
+                website: form.website,
+                description: form.description,
+                studentCount: form.studentCount ? Number(form.studentCount) : undefined,
+                adminName: form.adminName,
+                adminEmail: form.adminEmail,
+                adminPassword: form.adminPassword,
+                adminPhone: form.adminPhone,
+                designation: form.designation,
+                dataHosting: form.dataHosting,
+            });
+            setSubmitted(true);
+            toast.success('Request submitted! The Super Admin will review and approve it.');
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to submit request. Try again.');
+        }
     };
 
     if (submitted) {

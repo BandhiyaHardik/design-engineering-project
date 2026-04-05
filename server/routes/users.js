@@ -7,5 +7,6 @@ router.post('/register', c.register);
 router.get('/', c.getUsers);
 router.get('/:id', c.getProfile);
 router.put('/:id/role', c.updateUserRole);
+router.put('/:id', c.updateUser);
 
 module.exports = router;

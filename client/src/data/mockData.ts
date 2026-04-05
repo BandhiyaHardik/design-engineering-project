@@ -323,6 +323,16 @@ export const updateUserRole = async (userId: string, newRole: string) => {
   } catch (err: any) { throw err; }
 };
 
+/** Update user profile */
+export const updateUser = async (userId: string, updates: Partial<Omit<User, 'id' | 'email' | 'role'>>) => {
+  try {
+    const result = await api.updateUser(userId, updates) as any;
+    const normalized = normalizeId(result) as User;
+    _users = _users.map(u => u.id === userId ? normalized : u);
+    return normalized;
+  } catch (err: any) { throw err; }
+};
+
 /** Validate login credentials */
 export const validateCredentials = async (email: string, password: string): Promise<User | null> => {
   try {
@@ -335,7 +345,7 @@ export const validateCredentials = async (email: string, password: string): Prom
 
 
 /** Clear all data (for reset) */
-export const clearAllMitraData = () => {
+export const clearAllBVMData = () => {
   localStorage.clear();
 };
 

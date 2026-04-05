@@ -70,7 +70,7 @@ const features = [
     {
         icon: AlertTriangle,
         title: 'Conflict Detection',
-        desc: 'Mitra warns you if two events you register for overlap in time — before you commit.',
+        desc: 'BVM Campus Management warns you if two events you register for overlap in time — before you commit.',
         color: 'bg-yellow-500/10 text-yellow-500',
     },
     {
@@ -88,7 +88,7 @@ const features = [
     {
         icon: Lock,
         title: 'Data Sovereignty',
-        desc: "Your college data stays with you. Choose Mitra Cloud, self-hosted, or your own college servers.",
+        desc: "Your college data stays with you. Choose BVM Cloud, self-hosted, or your own college servers.",
         color: 'bg-green-500/10 text-green-500',
     },
     {
@@ -118,7 +118,7 @@ const colleges = [
 
 const testimonials = [
     {
-        quote: "Mitra replaced 3 different tools we were using — Google Forms, WhatsApp groups, and Excel sheets. Now everything is in one place.",
+        quote: "BVM Campus Management replaced 3 different tools we were using — Google Forms, WhatsApp groups, and Excel sheets. Now everything is in one place.",
         name: "Hardik Bandhiya",
         role: "Club Admin, AWS Cloud Club",
         college: "BVM Engineering College",
@@ -256,7 +256,7 @@ export default function Landing() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-sm md:text-base text-primary-foreground/70 max-w-2xl mx-auto mb-6"
                     >
-                        Mitra connects students with every hackathon, workshop, tech talk, and cultural event at their college.
+                        BVM Campus Management connects students with every hackathon, workshop, tech talk, and cultural event at their college.
                         One platform. Every event. Zero WhatsApp chaos.
                     </motion.p>
 

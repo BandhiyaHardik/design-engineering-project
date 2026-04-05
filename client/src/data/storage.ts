@@ -1,9 +1,9 @@
-// ─── LocalStorage persistence layer for Mitra demo ───
+// ─── LocalStorage persistence layer for BVM Campus Management demo ───
 // Provides get/set for each data collection, with JSON serialization.
 // On first load, returns null (so mockData uses initial seed data).
 // After any mutation, the full collection is persisted.
 
-const STORAGE_PREFIX = 'mitra_';
+const STORAGE_PREFIX = 'bvm_';
 
 function getItem<T>(key: string): T | null {
     try {
@@ -37,8 +37,8 @@ export function saveCollection<T>(key: string, data: T): void {
     setItem(key, data);
 }
 
-/** Clear all Mitra data from localStorage (for reset) */
-export function clearAllMitraData(): void {
+/** Clear all BVM Campus Management data from localStorage (for reset) */
+export function clearAllBVMData(): void {
     const keys = Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX));
     keys.forEach(k => localStorage.removeItem(k));
 }

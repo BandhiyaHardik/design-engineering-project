@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { mockEvents, mockClubs, mockOrganizations, getRegistrationsByUser, getEventById, updateUserRole } from '@/data/mockData';
+import { mockEvents, mockClubs, mockOrganizations, getRegistrationsByUser, getEventById, updateUserRole, updateUser } from '@/data/mockData';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import EventCard from '@/components/EventCard';
@@ -34,7 +34,7 @@ const roleLabels: Record<string, string> = {
 };
 
 export default function Profile() {
-  const { currentUser } = useAuth();
+  const { currentUser, login } = useAuth();
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState({
     name: currentUser.name,
@@ -59,9 +59,22 @@ export default function Profile() {
     { icon: BookOpen, label: 'Attended', value: attendedEvents.length, color: 'from-emerald-500 to-teal-600' },
   ];
 
-  const handleSaveProfile = () => {
-    setShowEditModal(false);
-    toast.success('Profile updated!');
+  const handleSaveProfile = async () => {
+    try {
+      const updates: any = {};
+      if (editForm.name) updates.name = editForm.name;
+      if (editForm.phone !== undefined) updates.phone = editForm.phone;
+      if (editForm.rollNumber !== undefined) updates.rollNumber = editForm.rollNumber;
+      if (editForm.year) updates.year = Number(editForm.year);
+      const updatedUser = await updateUser(currentUser.id, updates);
+      if (updatedUser) {
+        login({ ...currentUser, ...updatedUser });
+      }
+      setShowEditModal(false);
+      toast.success('Profile updated!');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to update profile.');
+    }
   };
 
   return (

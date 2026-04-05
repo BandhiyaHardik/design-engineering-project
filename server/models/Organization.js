@@ -8,7 +8,7 @@ const organizationSchema = new mongoose.Schema({
     description: { type: String, required: true },
     admins: [{ type: String }],
     isVerified: { type: Boolean, default: false },
-    dataHosting: { type: String, enum: ['mitra_cloud', 'self_hosted', 'college_server'] },
+    dataHosting: { type: String, enum: ['bvm_cloud', 'self_hosted', 'college_server'] },
     customAnnouncement: { type: String }
 }, { timestamps: true });
 

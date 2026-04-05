@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/data/api';
 
 
-const KNOWN_DOMAINS = ['bvm.edu.in', 'iitb.ac.in', 'nirma.edu.in', 'ldrp.ac.in', 'ddu.ac.in', 'mitra.dev'];
+const KNOWN_DOMAINS = ['bvm.edu.in', 'iitb.ac.in', 'nirma.edu.in', 'ldrp.ac.in', 'ddu.ac.in', 'bvm.dev'];
 
 const roleOptions = [
   { value: 'student', label: 'Student / Participant', icon: GraduationCap, desc: 'Discover and register for events' },
@@ -80,7 +80,7 @@ export default function Auth() {
 
   // Quick-login cards — fill credentials instantly
   const demoUsers = [
-    { label: 'Super Admin', email: 'admin@mitra.dev', password: 'Admin@123', color: 'bg-destructive/10 border-destructive/20 text-destructive' },
+    { label: 'Super Admin', email: 'admin@bvm.dev', password: 'Admin@123', color: 'bg-destructive/10 border-destructive/20 text-destructive' },
     { label: 'Org Admin', email: 'mehta@bvm.edu.in', password: 'OrgAdmin@123', color: 'bg-primary/10 border-primary/20 text-primary' },
     { label: 'Club Admin', email: 'hardik@bvm.edu.in', password: 'Club@123', color: 'bg-accent/10 border-accent/20 text-accent' },
     { label: 'Organizer', email: 'rajorg@bvm.edu.in', password: 'Organizer@123', color: 'bg-secondary border-border text-secondary-foreground' },
@@ -94,7 +94,7 @@ export default function Auth() {
           <div className="flex h-14 w-14 items-center justify-center rounded-xl gradient-primary mx-auto mb-4">
             <span className="text-2xl font-bold text-primary-foreground">M</span>
           </div>
-          <h1 className="text-2xl font-bold font-display">Welcome to Mitra</h1>
+          <h1 className="text-2xl font-bold font-display">Welcome to BVM Campus Management</h1>
           <p className="text-muted-foreground text-sm mt-1">Your campus event platform</p>
         </div>
 
@@ -197,8 +197,8 @@ export default function Auth() {
                   {domainRecognized && (
                     <p className={`text-xs flex items-center gap-1 ${isKnownDomain ? 'text-green-600' : 'text-orange-500'}`}>
                       {isKnownDomain
-                        ? <><Shield className="h-3 w-3" /> {emailDomain} is a registered institution on Mitra</>
-                        : <><AlertCircle className="h-3 w-3" /> {emailDomain} is not on Mitra — <button type="button" onClick={() => navigate('/onboard')} className="underline">Add your college</button></>
+                        ? <><Shield className="h-3 w-3" /> {emailDomain} is a registered institution on BVM Campus Management</>
+                        : <><AlertCircle className="h-3 w-3" /> {emailDomain} is not on BVM Campus Management — <button type="button" onClick={() => navigate('/onboard')} className="underline">Add your college</button></>
                       }
                     </p>
                   )}
@@ -234,7 +234,7 @@ export default function Auth() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-4">
-          Is your college not on Mitra?{' '}
+          Is your college not on BVM Campus Management?{' '}
           <button onClick={() => navigate('/onboard')} className="text-primary underline">Add it for free →</button>
         </p>
       </motion.div>

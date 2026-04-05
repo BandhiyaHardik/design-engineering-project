@@ -60,3 +60,16 @@ exports.updateUserRole = async (req, res) => {
         res.json(user);
     } catch (err) { res.status(400).json({ message: err.message }); }
 };
+
+exports.updateUser = async (req, res) => {
+    try {
+        const allowedFields = ['name', 'phone', 'rollNumber', 'year', 'interests', 'profilePhoto'];
+        const updates = {};
+        for (const key of allowedFields) {
+            if (req.body[key] !== undefined) updates[key] = req.body[key];
+        }
+        const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) { res.status(400).json({ message: err.message }); }
+};

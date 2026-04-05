@@ -3,7 +3,7 @@ import { User } from '@/types';
 import { loadAllData, validateCredentials } from '@/data/mockData';
 import { api } from '@/data/api';
 
-const STORAGE_KEY = 'mitra_user_id';
+const STORAGE_KEY = 'bvm_user_id';
 
 const GUEST_USER: User = {
     id: '', name: 'Guest', email: '', role: 'student',

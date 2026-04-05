@@ -953,7 +953,7 @@ export default function EventDetail() {
             <div className="inline-flex items-center justify-center rounded-2xl bg-white p-4 mb-4 shadow-sm border border-border">
               <QRCodeSVG
                 value={JSON.stringify({
-                  type: 'mitra_ticket',
+                  type: 'bvm_ticket',
                   eventId: event.id,
                   userId: currentUser.id,
                   name: currentUser.name,

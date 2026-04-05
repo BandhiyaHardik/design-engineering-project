@@ -1,8 +1,8 @@
-# Mitra — Campus Event Platform
+# BVM Campus Management — Event Platform
 
 **The open-source operating system for college communities.**
 
-Mitra helps colleges discover, register, and manage campus events — from hackathons and workshops to cultural fests and tech talks.
+BVM Campus Management helps colleges discover, register, and manage campus events — from hackathons and workshops to cultural fests and tech talks.
 
 ## Tech Stack
 

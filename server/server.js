@@ -27,6 +27,7 @@ app.use('/api/organizations', require('./routes/organizations'));
 app.use('/api/comments', require('./routes/comments'));
 app.use('/api/announcements', require('./routes/announcements'));
 app.use('/api/club-requests', require('./routes/clubRequests'));
+app.use('/api/org-requests', require('./routes/orgRequests'));
 
 // ── Health check ──
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));

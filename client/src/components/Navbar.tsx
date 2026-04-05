@@ -58,7 +58,7 @@ export default function Navbar() {
             <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary">
               <span className="text-lg font-bold text-primary-foreground">M</span>
             </div>
-            <span className="text-xl font-bold font-display text-foreground">Mitra</span>
+            <span className="text-xl font-bold font-display text-foreground">BVM</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">

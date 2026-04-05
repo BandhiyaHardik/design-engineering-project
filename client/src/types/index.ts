@@ -1,4 +1,4 @@
-// Types for Mitra platform
+// Types for BVM Campus Management platform
 
 export type UserRole = 'super_admin' | 'org_admin' | 'club_admin' | 'organizer' | 'student';
 
@@ -12,7 +12,7 @@ export type CheckInMethod = 'qr_scan' | 'ticket_scan' | 'manual';
 
 export type ResourceType = 'report' | 'slides' | 'drive' | 'recording' | 'github' | 'other';
 
-export type DataHosting = 'mitra_cloud' | 'self_hosted' | 'college_server';
+export type DataHosting = 'bvm_cloud' | 'self_hosted' | 'college_server';
 
 export interface User {
   id: string;

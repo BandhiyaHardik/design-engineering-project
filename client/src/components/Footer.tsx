@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary">
               <span className="text-sm font-bold text-primary-foreground">M</span>
             </div>
-            <span className="font-bold font-display text-foreground">Mitra</span>
+            <span className="font-bold font-display text-foreground">BVM</span>
             <span className="text-xs text-muted-foreground">— The Operating System for College Communities</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">

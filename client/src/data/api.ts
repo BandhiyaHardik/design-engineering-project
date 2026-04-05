@@ -1,4 +1,4 @@
-// ─── API client for Mitra backend ───
+// ─── API client for BVM Campus Management backend ───
 const API_BASE = 'http://localhost:5000/api';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -23,6 +23,8 @@ export const api = {
     getUser: (id: string) => request(`/users/${id}`),
     updateUserRole: (id: string, role: string) =>
         request(`/users/${id}/role`, { method: 'PUT', body: JSON.stringify({ role }) }),
+    updateUser: (id: string, data: any) =>
+        request(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
 
     // ── Events ──
     getEvents: () => request('/events'),
@@ -86,6 +88,15 @@ export const api = {
         request(`/club-requests/${id}/approve`, { method: 'PUT' }),
     rejectClubRequest: (id: string) =>
         request(`/club-requests/${id}/reject`, { method: 'PUT' }),
+
+    // ── Org Onboard Requests ──
+    getOrgRequests: () => request('/org-requests'),
+    createOrgRequest: (data: any) =>
+        request('/org-requests', { method: 'POST', body: JSON.stringify(data) }),
+    approveOrgRequest: (id: string) =>
+        request(`/org-requests/${id}/approve`, { method: 'PUT' }),
+    rejectOrgRequest: (id: string) =>
+        request(`/org-requests/${id}/reject`, { method: 'PUT' }),
 
     // ── Health ──
     health: () => request('/health'),

@@ -8,6 +8,7 @@ const Comment = require('./models/Comment');
 const Announcement = require('./models/Announcement');
 const ClubRequest = require('./models/ClubRequest');
 const Credential = require('./models/Credential');
+const OrgRequest = require('./models/OrgRequest');
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://admin:admin123@cluster0.b5kri5x.mongodb.net/campus-connect?retryWrites=true&w=majority";
 
@@ -25,7 +26,7 @@ async function seed() {
 
     // ── Users ──
     const users = await User.insertMany([
-        { _id: new mongoose.Types.ObjectId(), name: 'Platform Admin', email: 'admin@mitra.dev', role: 'super_admin', clubIds: [], interests: [], createdAt: '2024-01-01T00:00:00Z' },
+        { _id: new mongoose.Types.ObjectId(), name: 'Platform Admin', email: 'admin@bvm.dev', role: 'super_admin', clubIds: [], interests: [], createdAt: '2024-01-01T00:00:00Z' },
         { _id: new mongoose.Types.ObjectId(), name: 'Dr. Mehta', email: 'mehta@bvm.edu.in', role: 'org_admin', organizationId: 'org1', clubIds: [], interests: [], createdAt: '2024-01-01T00:00:00Z' },
         { _id: new mongoose.Types.ObjectId(), name: 'Hardik Bandhiya', email: 'hardik@bvm.edu.in', role: 'club_admin', organizationId: 'org1', clubIds: [], profilePhoto: '', rollNumber: '20BECE001', year: 3, phone: '+91 98765 43210', interests: ['Cloud Computing', 'Web Dev', 'AI/ML'], createdAt: '2024-08-01T00:00:00Z' },
         { _id: new mongoose.Types.ObjectId(), name: 'Dhavalkumar Prajapati', email: 'dhaval@bvm.edu.in', role: 'club_admin', organizationId: 'org1', clubIds: [], rollNumber: '20BECE034', year: 3, phone: '+91 98765 11111', interests: ['CP', 'DSA'], createdAt: '2024-02-01T00:00:00Z' },
@@ -44,7 +45,7 @@ async function seed() {
 
     // ── Credentials ──
     const creds = [
-        { email: 'admin@mitra.dev', password: 'Admin@123', userId: u.admin },
+        { email: 'admin@bvm.dev', password: 'Admin@123', userId: u.admin },
         { email: 'mehta@bvm.edu.in', password: 'OrgAdmin@123', userId: u.mehta },
         { email: 'hardik@bvm.edu.in', password: 'Club@123', userId: u.hardik },
         { email: 'dhaval@bvm.edu.in', password: 'Club@123', userId: u.dhaval },
@@ -263,6 +264,13 @@ async function seed() {
         { clubName: 'Cybersecurity Club', description: 'Ethical hacking, CTF competitions, and cyber awareness workshops.', organizationId: orgId, requestedBy: u.priya, requestedByName: 'Priya Shah', requestedByEmail: 'priya@bvm.edu.in', status: 'pending', createdAt: '2026-03-06T14:00:00Z' },
     ]);
     console.log(`Seeded ${clubRequests.length} club requests.`);
+
+    // ── Org Onboard Requests ──
+    const orgRequests = await OrgRequest.insertMany([
+        { collegeName: 'Nirma University', domain: 'nirma.edu.in', website: 'https://nirmauni.ac.in', description: 'A leading private university in Ahmedabad.', studentCount: 8000, adminName: 'Prof. Rajan', adminEmail: 'rajan@nirma.edu.in', adminPassword: 'Nirma@123', dataHosting: 'self_hosted', status: 'pending', createdAt: '2026-03-01T00:00:00Z' },
+        { collegeName: 'DDU, Nadiad', domain: 'ddu.ac.in', website: 'https://ddu.ac.in', description: 'Dharmsinh Desai University — a premier engineering institution.', studentCount: 4000, adminName: 'Dr. Chauhan', adminEmail: 'chauhan@ddu.ac.in', adminPassword: 'DDU@123', dataHosting: 'bvm_cloud', status: 'pending', createdAt: '2026-03-03T00:00:00Z' },
+    ]);
+    console.log(`Seeded ${orgRequests.length} org onboard requests.`);
 
     console.log('\n✅ Database seeded successfully!');
     await mongoose.disconnect();
