@@ -7,10 +7,34 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
         headers: { 'Content-Type': 'application/json' },
         ...options,
     });
+    const contentType = res.headers.get('content-type') || '';
+
     if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: res.statusText }));
-        throw new Error(err.message || 'API request failed');
+        const bodyText = await res.text().catch(() => '');
+        if (contentType.includes('application/json')) {
+            try {
+                const err = JSON.parse(bodyText);
+                throw new Error(err.message || 'API request failed');
+            } catch {
+                throw new Error(`API error ${res.status}: ${res.statusText}`);
+            }
+        }
+
+        if (bodyText.trim().startsWith('<!doctype') || bodyText.trim().startsWith('<html')) {
+            throw new Error(`API endpoint misconfigured (${res.status}). Check backend deployment and VITE_API_BASE_URL.`);
+        }
+
+        throw new Error(bodyText || `API error ${res.status}: ${res.statusText}`);
     }
+
+    if (!contentType.includes('application/json')) {
+        const bodyText = await res.text().catch(() => '');
+        if (bodyText.trim().startsWith('<!doctype') || bodyText.trim().startsWith('<html')) {
+            throw new Error('API returned HTML instead of JSON. Check backend route/rewrite config.');
+        }
+        throw new Error('API returned non-JSON response.');
+    }
+
     return res.json();
 }
 

@@ -209,7 +209,7 @@ export default function Auth() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
                       <Label htmlFor="r-roll">Roll Number</Label>
-                      <Input id="r-roll" value={regRollNo} onChange={e => setRegRollNo(e.target.value)} placeholder="e.g. 20BECE001" />
+                      <Input id="r-roll" value={regRollNo} onChange={e => setRegRollNo(e.target.value)} placeholder="e.g. 20BECE001" autoComplete="off" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="r-year">Year</Label>
